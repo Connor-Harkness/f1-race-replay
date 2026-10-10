@@ -16,7 +16,8 @@ Goal: render a session in real time using data pushed by the OpenF1 MQTT broker,
 
 ### 1. Dependencies and config
 - [ ] Add an MQTT client (`paho-mqtt`) to `requirements.txt`; run the advisory check first.
-- [ ] Add settings (broker URL, credentials via env var, never committed) in `src/lib/settings.py`.
+- [ ] Add non-secret settings (broker host/port) in `src/lib/settings.py`.
+- [ ] Auth: the tool is run locally at first, so prompt the user for auth details at startup (username/password or token, via `questionary`, already a dependency; password/token hidden input). Allow optional pre-fill from env vars or CLI flags to skip the prompt. Never persist credentials to disk or commit them.
 
 ### 2. MQTT ingest layer (`src/services/openf1_mqtt.py`)
 - [ ] Client wrapper: connect, reconnect with backoff, subscribe, thread-safe queue of raw messages.
@@ -44,7 +45,7 @@ Goal: render a session in real time using data pushed by the OpenF1 MQTT broker,
 - [ ] Document usage in README and `telemetry.md`.
 
 ## Risks / open questions
-- OpenF1 MQTT may require a paid/authenticated account during live sessions.
+- OpenF1 MQTT may require a paid/authenticated account during live sessions; the user supplies credentials at runtime (see Phase 1).
 - Location data rate and clock sync across topics (use message timestamps, not arrival time).
 - Tyre/compound and gap data availability and latency.
 - Missing safety car GPS; existing simulation approach can be reused.
